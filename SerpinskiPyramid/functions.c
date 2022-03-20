@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "functions.h"
+#include <math.h>
 
 void DrawControls() {
 	DrawRectangle(10, 10, 320, 133, Fade(SKYBLUE, 0.5f));
@@ -13,12 +14,18 @@ void DrawControls() {
 	DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY);
 }
 
-void DrawSerpinskiPyramid(float side, Vector3 top) {
-	if (side >= 10) {
-		DrawSerpinskiPyramid(side / 2, (Vector3) { top.x, top.y, top.z });
-		DrawSerpinskiPyramid(side / 2, (Vector3) { top.x, top.y, top.z });
-		DrawSerpinskiPyramid(side / 2, (Vector3) { top.x, top.y, top.z });
-		DrawSerpinskiPyramid(side / 2, (Vector3) { top.x, top.y, top.z });
-		DrawSerpinskiPyramid(side / 2, (Vector3) { top.x, top.y, top.z });
+void DrawSerpinskiPyramid3(float height, Vector3 top, Color pyramidColor, Color wireColor) {
+	float triangleHeight = height * (float)sqrt(12.0f / 13.0f);
+	if (height >= 2) {
+		float side = 4 * height / (float)sqrt(13.0f);
+		DrawSerpinskiPyramid3(height / 2, (Vector3) { top.x, top.y, top.z }, pyramidColor, wireColor);
+
+		DrawSerpinskiPyramid3(height / 2, (Vector3) { top.x, top.y - height / 2, top.z + triangleHeight / 3 }, pyramidColor, wireColor);
+		DrawSerpinskiPyramid3(height / 2, (Vector3) { top.x + side / 4, top.y - height / 2, top.z - triangleHeight / 6 }, pyramidColor, wireColor);
+		DrawSerpinskiPyramid3(height / 2, (Vector3) { top.x - side / 4, top.y - height / 2, top.z - triangleHeight / 6 }, pyramidColor, wireColor);
+	}
+	else {
+		DrawCylinder(top, 0.0f, triangleHeight * 2 / 3, height, 3, pyramidColor);
+		DrawCylinderWires(top, 0.0f, triangleHeight * 2 / 3, height, 3, wireColor);
 	}
 }

@@ -1,4 +1,5 @@
+#include "raylib.h"
 #pragma once
 
 void DrawControls();
-void DrawSerpinskiPyramid(float side, Vector3 top);
+void DrawSerpinskiPyramid3(float height, Vector3 top, Color pyramidColor, Color wireColor);

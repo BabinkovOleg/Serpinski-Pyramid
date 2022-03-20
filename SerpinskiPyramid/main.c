@@ -1,12 +1,12 @@
 #include "raylib.h"
 #include "functions.h"
+#include <math.h>
 
 int main(void)
 {
-	// Initialization
-	//--------------------------------------------------------------------------------------
 	const int screenWidth = 800;
 	const int screenHeight = 450;
+	const float pyramidHeight = 100.0f;
 
 	InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera free");
 
@@ -17,9 +17,8 @@ int main(void)
 	camera.fovy = 45.0f;
 	camera.projection = CAMERA_PERSPECTIVE;
 
-	//Set
 
-	Vector3 cubePosition = { 0.0f, 20.0f, 20.0f };
+	Vector3 pyramidPosition = { 0.0f, pyramidHeight / 2, 0.0f };
 
 	SetCameraMode(camera, CAMERA_FREE);
 
@@ -37,21 +36,8 @@ int main(void)
 		ClearBackground(RAYWHITE);
 
 		BeginMode3D(camera);
-
-		DrawCylinder((Vector3) { 0.0f, 0.0f, 0.0f }, 0.0f, 4.0f, 3.0f, 3, GOLD);
-		DrawCylinderWires((Vector3) { 0.0f, 0.0f, 0.0f }, 0.0f, 4.0f, 3.0f, 3, PINK);
-
-		//DrawTriangle3D((Vector3) { 100, 0, 0 }, (Vector3) { 0, 100, 0 }, (Vector3) { 0, 0, 100 }, RED);
-		//DrawTriangle3D(cubePosition, (Vector3) { 100, 0, 0 }, (Vector3) { 0, 0, 100 }, RED);
-		//DrawTriangle3D(cubePosition, (Vector3) { 100, 0, 0 }, (Vector3) { 0, 100, 0 }, RED);
-		//DrawTriangle3D(cubePosition, (Vector3) { 0, 100, 0 }, (Vector3) { 0, 0, 100 }, RED);
-
-		//DrawCube(cubePosition, 20.0f, 20.0f, 20.0f, RED);
-		//DrawCubeWires(cubePosition, 20.0f, 20.0f, 20.0f, MAROON);
-		//DrawSphere(cubePosition, 15.0f, BLUE);
-		//DrawSphereWires(cubePosition, 15.0f, 50, 50, MAROON);
-
-		DrawGrid(100, 1.0f);
+		
+		DrawSerpinskiPyramid3(pyramidHeight, pyramidPosition, RED, BLUE);
 
 		EndMode3D();
 
