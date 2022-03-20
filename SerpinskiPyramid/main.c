@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "functions.h"
 #include "rlights.h"
+#include "rlgl.h"
 #include <math.h>
 
 #define GLSL_VERSION 330
@@ -10,24 +11,24 @@ int main(void)
 	const int screenWidth = 1800;
 	const int screenHeight = 900;
 	const float pyramidHeight = 100.0f;
+	float minHeightOfPyramidElement = 5.0f;
 
 	SetConfigFlags(FLAG_MSAA_4X_HINT);
 
 	InitWindow(screenWidth, screenHeight, "Serpinski pyramid");
 
 	Camera3D camera = { 0 };
-	camera.position = (Vector3) { -20.0f, 60.0f, 100.0f };
+	camera.position = (Vector3) { -40.0f, 60.0f, 200.0f };
 	camera.target = (Vector3) { 0.0f, pyramidHeight / 2, 0.0f };
 	camera.up = (Vector3) { 0.0f, 1.0f, 0.0f };
 	camera.fovy = 60.0f;
 	camera.projection = CAMERA_PERSPECTIVE;
 	
-	float minHeightOfPyramidElement = 2.0f;
 
 	Vector3 pyramidPosition = { 0.0f, pyramidHeight, 0.0f };
 
-
 	SetCameraMode(camera, CAMERA_FREE);
+	int isCameraFree = 1;
 
 	Shader shader = LoadShader(TextFormat("resources/shaders/glsl%i/base_lighting.vs", GLSL_VERSION),
 		TextFormat("resources/shaders/glsl%i/lighting.fs", GLSL_VERSION));
@@ -39,7 +40,6 @@ int main(void)
 
 	int viewEyeLoc = GetShaderLocation(shader, "viewEye");
 	int viewCenterLoc = GetShaderLocation(shader, "viewCenter");
-	int runTimeLoc = GetShaderLocation(shader, "runTime");
 	int resolutionLoc = GetShaderLocation(shader, "resolution");
 
 	float resolution[2] = { (float)screenWidth, (float)screenHeight };
@@ -57,8 +57,29 @@ int main(void)
 		
 		UpdateCamera(&camera);
 
-		if (IsKeyDown('Z')) camera.target = (Vector3) { 0.0f, pyramidHeight / 2, 0.0f };
+		if (IsKeyDown(KEY_Z)) camera.target = (Vector3) { 0.0f, pyramidHeight / 2, 0.0f };
+		if (IsKeyDown(KEY_RIGHT)) light.position.x += 1;
+		if (IsKeyDown(KEY_LEFT)) light.position.x -= 1;
+		if (IsKeyDown(KEY_UP)) light.position.z -= 1;
+		if (IsKeyDown(KEY_DOWN)) light.position.z += 1;
+		if (IsKeyPressed(KEY_W)) light.enabled = !light.enabled;
+		if (IsKeyPressed(KEY_C)) {
+			if (isCameraFree) {
+				isCameraFree = 0;
+				SetCameraMode(camera, CAMERA_ORBITAL);
+				camera.target = (Vector3) { 0.0f, pyramidHeight / 2, 0.0f };
+			}
+			else {
+				isCameraFree = 1;
+				SetCameraMode(camera, CAMERA_FREE);
+			}
+		}
 		
+		//light.position.x = camera.position.x;
+		//light.position.z = camera.position.z;
+
+		UpdateLightValues(shader, light);
+
 		float cameraPos[3] = { camera.position.x, camera.position.y, camera.position.z };
 		float cameraTarget[3] = { camera.target.x, camera.target.y, camera.target.z };
 
@@ -69,13 +90,9 @@ int main(void)
 
 			BeginMode3D(camera);
 
-			//BeginShaderMode(shader);
-
 			DrawModelSerpinskiPyramid3(pyramidHeight, pyramidPosition, LIGHTGRAY, shader, 1.0f, pyramid, minHeightOfPyramidElement);
 			
-			//EndShaderMode();
-
-			DrawSphereEx(light.position, 2.0f, 8, 8, LIGHTGRAY);
+			DrawSphereEx(light.position, 2.0f, 8, 8, RAYWHITE);
 			
 			DrawModel(plate, (Vector3) { 0, 0, 0 }, 1.0f, GREEN);
 

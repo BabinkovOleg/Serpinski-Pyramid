@@ -3,15 +3,17 @@
 #include <math.h>
 
 void DrawControls() {
-	DrawRectangle(10, 10, 320, 133, Fade(SKYBLUE, 0.5f));
-	DrawRectangleLines(10, 10, 320, 133, BLUE);
+	DrawRectangle(10, 10, 320, 173, Fade(SKYBLUE, 0.5f));
+	DrawRectangleLines(10, 10, 320, 173, BLUE);
 
-	DrawText("Free camera default controls:", 20, 20, 10, BLACK);
+	DrawText("Camera default controls:", 20, 20, 10, BLACK);
 	DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, DARKGRAY);
 	DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, DARKGRAY);
 	DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, DARKGRAY);
 	DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, DARKGRAY);
-	DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY);
+	DrawText("- Z to zoom to center", 40, 120, 10, DARKGRAY);
+	DrawText("- C to toggle camera mode", 40, 140, 10, DARKGRAY);
+	DrawText("- Up/Down and Right/Left to move light point", 40, 160, 10, DARKGRAY);
 }
 
 void DrawSerpinskiPyramid3(float height, Vector3 top, Color pyramidColor, Color wireColor, float minHeight) {
